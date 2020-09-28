@@ -1,2 +1,2 @@
 # scripts
-Scripts interessantes
+Scripts interessantes desenvolvidos para auxiliar a vida do sysadmin
