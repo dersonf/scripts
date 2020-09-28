@@ -3,6 +3,7 @@
 
 WORKDIR=$(pwd)
 INTERPRETADOR='/usr/bin/python3'
+
 if [ -z $1 ]; then
     echo "Informe um nome de arquivo."   
 else
