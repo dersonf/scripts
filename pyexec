@@ -1,0 +1,16 @@
+#!/bin/bash
+WORKDIR=$(pwd)
+
+if [ -z $1 ]; then
+    echo "Informe um nome de arquivo."   
+else
+    arquivo="$WORKDIR/$1.py"
+    if [ -f $arquivo ]; then
+        echo "$arquivo já existe"
+    else
+        touch $arquivo
+        chmod +x $arquivo
+        echo '#!/usr/bin/python3' > $arquivo
+        echo "$arquivo criado!!!"
+    fi
+fi
