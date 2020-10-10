@@ -3,23 +3,28 @@ from os import system
 from sys import argv
 from subprocess import check_output
 
-areas = ['coloque',
-         'seus',
-         'clusters'
-         'aqui',
+areas = [
+        'coloque',
+        'seus',
+        'clusters'
+        'aqui',
         ]
 
 
 def main(opcao, area_namespace=''):
     if opcao == 'pods':
         system("kubectl get pods -owide")
+
     elif opcao == 'top':
         system("kubectl top pods")
+
     elif opcao == 'hpa':
         system("kubectl get hpa")
+
     elif opcao == 'default':
         system("kubectl config get-contexts | grep '^*' |"
                "tr -s ' ' | cut -d ' ' -f2,5")
+
     elif opcao == 'cluster':
         if area_namespace in areas:
             comando = f"kubectl config use-context {area_namespace}"
@@ -27,6 +32,7 @@ def main(opcao, area_namespace=''):
         else:
             print("Cluster inexistente.")
             print_clusters()
+
     elif opcao == 'namespace':
         if not area_namespace:
             print("Informe o namespace")
@@ -34,15 +40,19 @@ def main(opcao, area_namespace=''):
             comando = "kubectl get namespaces | cut -d ' ' -f1"
             namespaces = check_output(comando,
                                       encoding='UTF-8',
-                                      shell=True,
-                                      executable='/bin/bash').splitlines()
+                                      shell=True).splitlines()
+            namespaces.remove('NAME')
             if area_namespace in namespaces:
                 for cluster in areas:
                     comando = f"kubectl config set-context {cluster} \
                               --namespace={area_namespace}"
                     system(comando)
             else:
-                print(f"{area_namespace} não encontrada!")
+                print(f"\nnamespace: '{area_namespace}' não encontrado!\n"
+                      "\nNAMESPACES encontrados:\n")
+                for namespace in namespaces:
+                    print(namespace)
+
     else:
         print(f"\nOpção inválida: {opcao}\n")
         help()
@@ -61,8 +71,8 @@ def help():
                 "\t- hpa: Exibe o status do hpa.\n"
                 "\t- default: Exibe o cluster e namespace padrão.\n"
                 "\t- cluster: Altera o cluster padrão.\n"
-                "\t- namespace: Altera o namespace padrão de todos"
-                " os clusters.\n")
+                "\t- namespace: Altera o namespace padrão de todos "
+                "os clusters.\n")
     print(mensagem)
 
 
